@@ -4,7 +4,7 @@ import audio2video
 
 # get filename arguments and convert mp4 to wav
 filename = ''
-audio_filename = "cock.wav"
+audio_filename = "cock.mp3"
 if len(sys.argv) > 1:
     filename = sys.argv[1]
     converter = video2text.ConvertToAudio(filename)
@@ -14,6 +14,5 @@ if len(sys.argv) > 1:
 text_data = converter.convert_2_str()
 creator = audio2video.VideoCreator(text_data, audio_filename)
 creator.createVideo()
-
-# testing
+converter.clear_files()
 

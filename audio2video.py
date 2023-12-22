@@ -25,27 +25,20 @@ class VideoCreator:
         print("Creating subtitles...")
         for segment in self.subtitleData['segments']:
             for word in segment['words']:
-                audio_chunk = self.audioClip.subclip(word['start'], word['end'])
-                self.audioChunks.append(audio_chunk)
                 start = word['start'] 
-                end = word['end'] 
+                end = word['end']
                 text = word['text'].upper()
-                subtitle = TextClip(text, fontsize=40, color='white', font='Helvetica-Bold').set_start(start)
-                subtitle = subtitle.set_duration(end - start)
-                subtitle = subtitle.set_end(end)    
+                subtitle = TextClip(text, size=(608, 400) ,fontsize=50, color='white', font='Impact', method='caption').set_start(start)
+                subtitle = subtitle.set_start(start, change_end=True).set_duration(end - start)
                 self.subtitleClip.append(subtitle)
         print("Subtitles created!")
                 
     def createVideo(self):
         self.createSubtitles()
-        subtitles = concatenate_videoclips(self.subtitleClip)
-        audio = concatenate_audioclips(self.audioChunks)
-        final_clip = CompositeVideoClip([self.videoClip, subtitles.set_pos(('center', 'center'))])
-        final_clip = final_clip.set_audio(audio)
-        final_clip.write_videofile("output.mp4", fps=24, codec="libx264")
+        subtitles = CompositeVideoClip(self.subtitleClip)
+        final_clip = CompositeVideoClip([self.videoClip, subtitles.set_position(("center", "center"))])
+        final_clip = final_clip.set_audio(self.audioClip)
+        final_clip.write_videofile("out/output.mp4", fps=24, codec="libx264")
         final_clip.close()
         self.videoClip.close()
         self.audioClip.close()
-
-
-
